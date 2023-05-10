@@ -1,25 +1,38 @@
 import allure
+from allure_commons.types import Severity
 from selene import by, be
 from selene import browser
 
 
+url = "https://github.com"
+repository = "eroshenkoam/allure-example"
+issue_num = "#76"
+
+
+@allure.tag('web')
+@allure.severity(Severity.BLOCKER)
+@allure.label('owner', 'Dronov')
+@allure.feature(f'Проверка наличия Issue {issue_num}')
+@allure.story('Шаги с декоратором @allure.step')
+@allure.link(url, name='Test')
+
 def test_decorator_steps():
-    open_main_page()
-    search_for_repository("eroshenkoam/allure-example")
-    go_to_repository("eroshenkoam/allure-example")
+    open_main_page(url)
+    search_for_repository(repository)
+    go_to_repository(repository)
     open_issue_tab()
-    should_see_issue_with_number("#76")
+    should_see_issue_with_number(issue_num)
 
 
 @allure.step("Открываем главную страницу")
-def open_main_page():
-    browser.open_url("https://github.com")
+def open_main_page(url):
+    browser.open(url)
 
 
 @allure.step("Ищем репозитория {repo}")
 def search_for_repository(repo):
     browser.element(".header-search-input").click()
-    browser.element(".header-search-input").send_keys("eroshenkoam/allure-example")
+    browser.element(".header-search-input").send_keys(repo)
     browser.element(".header-search-input").submit()
 
 
